@@ -4,7 +4,8 @@ import { fileRouter } from './routers/file';
 import bodyParser from 'body-parser'
 import compression from 'compression'
 import cors from 'cors'
-
+import { ApiAuthorization } from './middleware/apiAuthorization'
+import handleErrors from './middleware/error-handler'
 dotenv.config();
 require('./database/connection')()
 
@@ -17,6 +18,8 @@ app.listen(port, () => {
 });
 
 const APIRouter = express.Router()
+app.use(ApiAuthorization)
 app.use('/', APIRouter)
 APIRouter.use(bodyParser.json())
 APIRouter.use('/file', fileRouter);
+app.use(handleErrors)
